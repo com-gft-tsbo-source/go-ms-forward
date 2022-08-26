@@ -1,0 +1,5 @@
+CUSTOMER ?= com.gft.tsbo
+PROJECT ?= $(CUSTOMER).source
+MODULE ?= application
+COMPONENT ?= ms-forward
+GIT_HOST ?= github.com
