@@ -57,7 +57,7 @@ func (ms *MsForward) httpGetForward(w http.ResponseWriter, r *http.Request) (sta
 	version := r.Header.Get("X-Version")
 	environment := r.Header.Get("X-Environment")
 	msg = fmt.Sprintf("'v%s' in '%s' Generated random number '%d' for client '%s@%s'.", ms.GetVersion(), environment, value, name, version)
-	response := NewForwardResponse(msg, ms)
+	response := NewForwardResponse(status, msg, ms)
 	response.Value = value
 	ms.SetResponseHeaders("application/json; charset=utf-8", w, r)
 	w.WriteHeader(status)

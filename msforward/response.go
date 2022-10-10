@@ -19,14 +19,14 @@ type ForwardResponse struct {
 // ###########################################################################
 
 // InitForwardResponse Constructor of a response of ms-forward
-func InitForwardResponse(r *ForwardResponse, status string, ms *MsForward) {
-	microservice.InitResponseFromMicroService(&r.Response, ms, status)
+func InitForwardResponse(r *ForwardResponse, code int, status string, ms *MsForward) {
+	microservice.InitResponseFromMicroService(&r.Response, ms, code, status)
 	r.Value = 0
 }
 
 // NewForwardResponse ...
-func NewForwardResponse(status string, ms *MsForward) *ForwardResponse {
+func NewForwardResponse(code int, status string, ms *MsForward) *ForwardResponse {
 	var r ForwardResponse
-	InitForwardResponse(&r, status, ms)
+	InitForwardResponse(&r, code, status, ms)
 	return &r
 }
