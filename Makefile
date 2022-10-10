@@ -38,10 +38,8 @@ DOCKER_DIR     ?= $(BUILD_DIR)/docker
 DOCKER_VARIANT ?= alpine
 DOCKER_SUFFIX  ?= base
 DOCKER_IID     ?= $(DOCKER_DIR)/$(TARGET)-$(DOCKER_SUFFIX)-$(DOCKER_VARIANT).iid
-DOCKER_LOCAL_IID     ?= $(DOCKER_DIR)/$(TARGET)-$(DOCKER_SUFFIX)-$(DOCKER_VARIANT)-local.iid
 DOCKER_IMAGE   ?= $(TARGET):$(DOCKER_SUFFIX)
 DOCKER_FILE    ?= Dockerfile-$(DOCKER_VARIANT)
-DOCKER_LOCAL_FILE    ?= Dockerfile-$(DOCKER_VARIANT)-local
 
 include .makesrc
 
@@ -56,7 +54,7 @@ include:
 info: _buildinfo _dockerinfo
 
 _buildinfo:
-	@$(ECHO) "### GOM /INFO  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /INFO  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@$(ECHO) "CUSTOMER       '$(CUSTOMER)'" 
 	@$(ECHO) "PROJECT        '$(PROJECT)'" 
 	@$(ECHO) "COMPONENT      '$(COMPONENT)'" 
@@ -77,12 +75,12 @@ _dockerinfo: _buildinfo
 include .makebuild
 
 ls:
-	@$(ECHO) "### GOM /LS    $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /LS    $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@$(LS) -l $(BIN_DIR)/$(TARGET) 2>/dev/null || exit 0
 	@($(LS) -l "$(DOCKER_IID)" 2>/dev/null && cat "$(DOCKER_IID)" && $(ECHO) ) ; exit 0
 
 docker-ls:
-	@$(ECHO) "### GOM /DOLS  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /DOLS  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@($(LS) -l "$(DOCKER_IID)" 2>/dev/null && cat "$(DOCKER_IID)" && $(ECHO) ) ; exit 0
 	@while read img imgname ; do \
 		$(ECHO) "I $$img $$imgname" ; \
@@ -107,7 +105,7 @@ docker-$(DOCKER_VARIANT): $(DOCKER_IID)
 $(DOCKER_IID): _dockerinfo $(DOCKER_FILE) \
 	                             $(SRCS) \
 	                             Makefile
-	@$(ECHO) "### GOM /DOCK  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /DOCK  $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@if [ -f "$(DOCKER_IID)" ] ; then i=$$( cat "$(DOCKER_IID)" ); $(DOCKER) image rm -f $$i ; rm -f "$(DOCKER_IID)"  2>/dev/null ; fi
 	@$(MKDIR) "$(DOCKER_DIR)" 
 	@$(DOCKER) image build -f "./$(DOCKER_FILE)" \
@@ -129,12 +127,12 @@ $(DOCKER_IID): _dockerinfo $(DOCKER_FILE) \
 	 "$(DOCKER_SRCDIR)" 
 
 clean:
-	@$(ECHO) "### GOM /CLEAN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /CLEAN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@$(RM) -rf $(BIN_DIR)/$(TARGET) $(OBJ_DIR)
 	@$(MKDIR) $(BIN_DIR) $(OBJ_DIR)
 
 docker-clean:
-	@$(ECHO) "### GOM /DOCLN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /DOCLN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 	@while read img imgname ; do \
 		while read id state name image ; do \
 			$(PRINTF) 'C %-7s %-10s %-20s %s\n' "$$id" "$$state" "$$name" "$$image" ; \
@@ -146,8 +144,8 @@ docker-clean:
 	@if [ -f "$(DOCKER_IID)" ] ; then i=$$( cat "$(DOCKER_IID)" ); $(DOCKER) image rm -f $$i 2>/dev/null ; rm -f "$(DOCKER_IID)"  2>/dev/null ; fi
 
 distclean: clean
-	@$(ECHO) "### GOM /DICLN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /DICLN $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 
 docker-distclean: docker-clean
-	@$(ECHO) "### GOM /DDICL $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
+	@$(ECHO) "### GO  /DDICL $(PROJECT).$(MODULE).$(COMPONENT) - $(DOCKER_VARIANT)"
 
